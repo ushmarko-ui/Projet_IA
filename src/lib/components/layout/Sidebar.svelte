@@ -13,7 +13,7 @@
 	let importFileInputElement;
 	let importFiles;
 
-	let title: string = "Ollama Web UI";
+	let title: string = "AstroLink";
 	let search = "";
 
 	let chatDeleteId = null;
@@ -103,19 +103,12 @@
 				</div>
 
 				<div class="self-center">
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						viewBox="0 0 20 20"
-						fill="currentColor"
-						class="w-4 h-4"
-					>
-						<path
-							d="M5.433 13.917l1.262-3.155A4 4 0 017.58 9.42l6.92-6.918a2.121 2.121 0 013 3l-6.92 6.918c-.383.383-.84.685-1.343.886l-3.154 1.262a.5.5 0 01-.65-.65z"
-						/>
-						<path
-							d="M3.5 5.75c0-.69.56-1.25 1.25-1.25H10A.75.75 0 0010 3H4.75A2.75 2.75 0 002 5.75v9.5A2.75 2.75 0 004.75 18h9.5A2.75 2.75 0 0017 15.25V10a.75.75 0 00-1.5 0v5.25c0 .69-.56 1.25-1.25 1.25h-9.5c-.69 0-1.25-.56-1.25-1.25v-9.5z"
-						/>
-					</svg>
+					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-16 h-16 text-cyan-400">
+  <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.71-2.13 0-3" />
+  <path d="m12 15-3-3m1.35-2.35L15 6.45c.42-.42 1-.65 1.55-.65h4c.55 0 1 .45 1 1v4c0 .55-.23 1.13-.65 1.55L14.25 18.3c-.42.42-1 .65-1.55.65h-4c-.55 0-1-.45-1-1v-4c0-.55.23-1.13.65-1.55Z" />
+  <path d="m15 9 3 3" />
+  <path d="M9.5 14.5c-1.26 1.5-5 2-5 2s.5-3.74 2-5c.84-.71 2.13-.71 3 0" />
+</svg>
 				</div>
 			</button>
 		</div>

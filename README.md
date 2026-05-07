@@ -1,10 +1,10 @@
-# Ollama Web UI Lite 🦙
+# AstroLink Lite 🦙
 
-Ollama Web UI Lite is a streamlined version of [Ollama Web UI](https://github.com/ollama-webui/ollama-webui), designed to offer a simplified user interface with minimal features and reduced complexity. The primary focus of this project is on achieving cleaner code through a full TypeScript migration, adopting a more modular architecture, ensuring comprehensive test coverage, and implementing a robust CI/CD pipeline.
+AstroLink Lite is a streamlined version of [AstroLink](https://github.com/ollama-webui/ollama-webui), designed to offer a simplified user interface with minimal features and reduced complexity. The primary focus of this project is on achieving cleaner code through a full TypeScript migration, adopting a more modular architecture, ensuring comprehensive test coverage, and implementing a robust CI/CD pipeline.
 
 ## Features ⭐
 
-The current version includes only the essential functionalities found in the full [Ollama Web UI](https://github.com/ollama-webui/ollama-webui), such as pulling and deleting models, engaging in conversations with one or multiple models, chat import/export, etc.
+The current version includes only the essential functionalities found in the full [AstroLink](https://github.com/ollama-webui/ollama-webui), such as pulling and deleting models, engaging in conversations with one or multiple models, chat import/export, etc.
 
 We are committed to maintaining this repository and progressively working through our to-do list to enhance its capabilities. The planned improvements include:
 
@@ -45,7 +45,7 @@ Follow these steps to set up Ollama-webui-lite:
    npm run dev
    ```
 
-   Ollama Web UI Lite now should be available at http://localhost:3000
+   AstroLink Lite now should be available at http://localhost:3000
 
 ![Preview](preview.png)
 
@@ -56,9 +56,9 @@ This project is licensed under the [MIT License](LICENSE) - see the [LICENSE](LI
 ## Support 💬
 
 If you have any questions, suggestions, or need assistance, please open an issue or join our
-[Ollama Web UI Discord community](https://discord.gg/5rJgQTnV4s) or
+[AstroLink Discord community](https://discord.gg/5rJgQTnV4s) or
 [Ollama Discord community](https://discord.gg/ollama) to connect with us! 🤝
 
 ---
 
-Proudly Maintained by [Duc Dang](https://github.com/dangminhduc1101) and Created by [Timothy J. Baek](https://github.com/tjbck) - Let's make Ollama Web UI even more amazing together! 💪
+Proudly Maintained by [Duc Dang](https://github.com/dangminhduc1101) and Created by [Timothy J. Baek](https://github.com/tjbck) - Let's make AstroLink even more amazing together! 💪

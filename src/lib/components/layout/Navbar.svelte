@@ -4,7 +4,7 @@
 	import { goto } from "$app/navigation";
 	import { chatId, db } from "$lib/stores";
 
-	export let title: string = "Ollama Web UI";
+	export let title: string = "AstroLink";
 </script>
 
 <nav
@@ -40,7 +40,7 @@
 				</button>
 			</div>
 			<div class=" flex-1 self-center font-medium text-ellipsis whitespace-nowrap overflow-hidden">
-				{title != "" ? title : "Ollama Web UI"}
+				{title != "" ? title : "AstroLink"}
 			</div>
 		</div>
 	</div>

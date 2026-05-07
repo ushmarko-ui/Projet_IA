@@ -263,16 +263,14 @@
 					show = false;
 				}}
 			>
-				<svg
-					xmlns="http://www.w3.org/2000/svg"
-					viewBox="0 0 20 20"
-					fill="currentColor"
-					class="w-5 h-5"
-				>
-					<path
-						d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z"
-					/>
-				</svg>
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-12 h-12 text-blue-500">
+  <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.71-2.13 0-3" />
+  <path d="m12 15-3-3m1.35-2.35L15 6.45c.42-.42 1-.65 1.55-.65h4c.55 0 1 .45 1 1v4c0 .55-.23 1.13-.65 1.55L14.25 18.3c-.42.42-1 .65-1.55.65h-4c-.55 0-1-.45-1-1v-4c0-.55.23-1.13.65-1.55Z" />
+  <path d="m15 9 3 3" />
+  <path d="M9.5 14.5c-1.26 1.5-5 2-5 2s.5-3.74 2-5c.84-.71 2.13-.71 3 0" />
+  <path d="M5 19L3.5 20.5" />
+  <path d="M19 5L20.5 3.5" />
+</svg>
 			</button>
 		</div>
 		<hr class=" dark:border-gray-800" />
@@ -662,7 +660,7 @@
 					<div class="flex flex-col h-full justify-between space-y-3 text-sm mb-6">
 						<div class=" space-y-3">
 							<div>
-								<div class=" mb-2.5 text-sm font-medium">Ollama Web UI Version</div>
+								<div class=" mb-2.5 text-sm font-medium">AstroLink Version</div>
 								<div class="flex w-full">
 									<div class="flex-1 text-xs text-gray-700 dark:text-gray-200">
 										{WEB_UI_VERSION}

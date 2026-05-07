@@ -1,4 +1,4 @@
-# Ollama Web UI Troubleshooting Guide
+# AstroLink Troubleshooting Guide
 
 ## Connection Errors
 
@@ -25,7 +25,7 @@ Ensure that the Ollama URL is correctly formatted in the application settings. F
 - Navigate to the "General" section.
 - Verify that the Ollama Server URL is set to: `/ollama/api`.
 
-It is crucial to include the `/api` at the end of the URL to ensure that the Ollama Web UI can communicate with the server.
+It is crucial to include the `/api` at the end of the URL to ensure that the AstroLink can communicate with the server.
 
 By following these troubleshooting steps, you should be able to identify and resolve connection issues with your Ollama server configuration. If you require further assistance or have additional questions, please don't hesitate to reach out or refer to our documentation for comprehensive guidance.
 
