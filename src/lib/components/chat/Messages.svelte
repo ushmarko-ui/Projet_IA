@@ -296,7 +296,7 @@
 			</svg>
 		</div>
 		<div class=" mt-4 text-2xl text-cyan-400 font-bold tracking-widest uppercase">
-			système AstroLink prêt au décollage.
+			La meilleur IA créée par Marko
 		</div>
 	</div>
 {:else}
