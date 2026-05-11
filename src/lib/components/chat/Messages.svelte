@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { base } from '$app/paths';
 	import { marked } from "marked";
 	import { v4 as uuidv4 } from "uuid";
 	import tippy from "tippy.js";

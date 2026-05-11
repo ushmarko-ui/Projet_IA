@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { base } from '$app/paths';
 	import { v4 as uuidv4 } from "uuid";
 	import { goto } from "$app/navigation";
 	import { chatId, db } from "$lib/stores";
