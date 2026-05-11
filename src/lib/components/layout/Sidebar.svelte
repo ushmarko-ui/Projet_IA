@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { base } from '$app/paths';
 	import { v4 as uuidv4 } from "uuid";
 
 	import fileSaver from "file-saver";
@@ -7,7 +8,7 @@
 	import { goto } from "$app/navigation";
 	import { db, chats, showSettings, chatId } from "$lib/stores";
 	import { onMount } from "svelte";
-	import logo from '$lib/../static/astrolink.png';
+	
 
 	let show = false;
 	let navElement;
@@ -97,7 +98,7 @@
 			>
 				<div class="flex self-center">
 					<div class="self-center mr-3.5">
-						<img src="/astrolink.png" alt="AstroLink" class="w-8 h-8 rounded-md shadow-lg shadow-cyan-500/20" />
+					<img src="{base}/astrolink.png" alt="AstroLink" class="w-8 h-8 rounded-full border border-cyan-500/50" />
 					</div>
 
 					<div class=" self-center font-medium text-sm">New Chat</div>
