@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { base } from '$app/paths';
 	import { v4 as uuidv4 } from "uuid";
 	import toast from "svelte-french-toast";
 

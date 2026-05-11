@@ -22,7 +22,6 @@
 	export let history = {};
 	export let messages = [];
 
-	// --- MOTEUR D'ÉTOILES FILANTES (Canvas) ---
 	onMount(() => {
 		const canvas = document.getElementById('stars-canvas') as HTMLCanvasElement;
 		const ctx = canvas.getContext('2d');
@@ -77,7 +76,6 @@
 		};
 	});
 
-	// Gestion des messages et rendus
 	$: if (messages && messages.length > 0 && (messages.at(-1).done ?? false)) {
 		(async () => {
 			await tick();
@@ -108,37 +106,30 @@
 <div class="relative z-10"> 
 {#if messages.length == 0}
 	<div class="m-auto text-center max-w-md pb-56 px-2 min-h-screen flex flex-col justify-center">
-    <div class="flex justify-center mt-8">
-        <div class="relative group">
-            <div class="absolute -inset-2 bg-gradient-to-br from-cyan-600/30 to-purple-600/20 rounded-full blur-2xl opacity-80 animate-pulse"></div>
-            
-            <img 
-                src="/astrolink.png" 
-                alt="AstroLink Logo" 
-                class="relative w-48 h-48 object-cover drop-shadow-[0_0_15px_rgba(34,211,238,0.6)]" 
-            />
+        <div class="flex justify-center mt-8">
+            <div class="relative group">
+                <div class="absolute -inset-2 bg-gradient-to-br from-cyan-600/30 to-purple-600/20 rounded-full blur-2xl opacity-80 animate-pulse"></div>
+                
+                <img 
+                    src="{base}/astrolink.png" 
+                    alt="AstroLink Logo" 
+                    class="relative w-48 h-48 object-cover drop-shadow-[0_0_15px_rgba(34,211,238,0.6)]" 
+                />
+            </div>
         </div>
-    </div>
-    
-    <div class=" mt-4 text-sm text-cyan-300/60 font-medium italic">
-        By Marko
-    </div>
-
-		<div class=" mt-6 text-3xl text-cyan-400 font-bold tracking-[0.2em] uppercase drop-shadow-lg">
-			
-		</div>
-		<div class=" mt-2 text-sm text-cyan-300/60 font-medium italic">
-			
-		</div>
+        
+        <div class="mt-4 text-sm text-cyan-300/60 font-medium italic">
+            By Marko
+        </div>
 	</div>
 {:else}
 	{#each messages as message}
-		<div class=" w-full py-4 {message.role === 'user' ? '' : 'bg-slate-900/40 backdrop-blur-sm border-y border-white/5'}">
+		<div class="w-full py-4 {message.role === 'user' ? '' : 'bg-slate-900/40 backdrop-blur-sm border-y border-white/5'}">
 			<div class="flex justify-between px-5 max-w-3xl mx-auto rounded-lg group">
-				<div class=" flex w-full">
-					<div class=" mr-4">
+				<div class="flex w-full">
+					<div class="mr-4">
 						{#if message.role === "user"}
-							<img src="/user.png" class=" max-w-[28px] object-cover rounded-full border border-cyan-500/30" alt="User" />
+							<img src="{base}/user.png" class="max-w-[28px] object-cover rounded-full border border-cyan-500/30" alt="User" />
 						{:else}
 							<div class="p-1 bg-cyan-900/50 rounded-full border border-cyan-400/50 shadow-[0_0_10px_rgba(34,211,238,0.3)]">
 								<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-[20px] h-[20px] text-cyan-400">
@@ -148,7 +139,7 @@
 						{/if}
 					</div>
 					<div class="w-full overflow-hidden text-slate-100">
-						<div class=" self-center font-bold mb-0.5 {message.role === 'user' ? 'text-white' : 'text-cyan-300'}">
+						<div class="self-center font-bold mb-0.5 {message.role === 'user' ? 'text-white' : 'text-cyan-300'}">
 							{#if message.role === "user"} You {:else} AstroLink {/if}
 						</div>
 						
@@ -176,7 +167,7 @@
 			</div>
 		</div>
 	{/each}
-	{#if bottomPadding} <div class=" mb-24" /> {/if}
+	{#if bottomPadding} <div class="mb-24" /> {/if}
 {/if}
 </div>
 
