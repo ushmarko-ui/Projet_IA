@@ -7,6 +7,7 @@
 	import { goto } from "$app/navigation";
 	import { db, chats, showSettings, chatId } from "$lib/stores";
 	import { onMount } from "svelte";
+	import logo from '$lib/../static/astrolink.png';
 
 	let show = false;
 	let navElement;

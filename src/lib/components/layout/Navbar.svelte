@@ -3,6 +3,7 @@
 	import { v4 as uuidv4 } from "uuid";
 	import { goto } from "$app/navigation";
 	import { chatId, db } from "$lib/stores";
+	import logo from '$lib/../static/astrolink.png';
 
 	export let title: string = "AstroLink";
 </script>
