@@ -7,7 +7,11 @@ const config = {
 
 	kit: {
 		adapter: adapter(),
-		// On retire complètement prerender pour laisser Vercel gérer
+		prerender: {
+			// LE BOUTON MAGIQUE : On ignore les erreurs de liens
+			handleHttpError: 'ignore',
+            handleMissingId: 'ignore'
+		}
 	}
 };
 
