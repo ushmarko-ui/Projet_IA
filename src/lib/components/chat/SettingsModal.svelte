@@ -130,7 +130,7 @@
 								if (data.status === "success") {
 									const notification = new Notification(`Ollama`, {
 										body: `Model '${modelTag}' has been successfully downloaded.`,
-										icon: "/favicon.png"
+										icon: "/astrolink.png"
 									});
 								}
 							} else {

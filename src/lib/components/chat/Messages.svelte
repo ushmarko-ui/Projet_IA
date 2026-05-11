@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { marked } from "marked";
-
 	import { v4 as uuidv4 } from "uuid";
 	import tippy from "tippy.js";
 	import hljs from "highlight.js";
@@ -9,7 +8,7 @@
 	import "katex/dist/katex.min.css";
 
 	import { chatId, db } from "$lib/stores";
-	import { tick } from "svelte";
+	import { tick, onMount } from "svelte"; 
 
 	import toast from "svelte-french-toast";
 
@@ -22,447 +21,167 @@
 	export let history = {};
 	export let messages = [];
 
+	// --- MOTEUR D'ÉTOILES FILANTES (Canvas) ---
+	onMount(() => {
+		const canvas = document.getElementById('stars-canvas') as HTMLCanvasElement;
+		const ctx = canvas.getContext('2d');
+		if (!ctx) return;
+		
+		let particles: any[] = [];
+		let animationId: number;
+
+		const resize = () => {
+			canvas.width = window.innerWidth;
+			canvas.height = window.innerHeight;
+		};
+
+		class Star {
+			x: number; y: number; size: number; speedY: number; opacity: number;
+			constructor() { this.reset(); }
+			reset() {
+				this.x = Math.random() * canvas.width;
+				this.y = Math.random() * (canvas.height || 800);
+				this.size = Math.random() * 1.5;
+				this.speedY = (Math.random() * 0.5) + 0.1; 
+				this.opacity = Math.random();
+			}
+			update() {
+				this.y += this.speedY;
+				if (this.y > canvas.height) this.reset();
+			}
+			draw() {
+				if (!ctx) return;
+				ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
+				ctx.beginPath();
+				ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+				ctx.fill();
+			}
+		}
+
+		for (let i = 0; i < 200; i++) particles.push(new Star());
+
+		const animate = () => {
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
+			particles.forEach(p => { p.update(); p.draw(); });
+			animationId = requestAnimationFrame(animate);
+		};
+
+		window.addEventListener('resize', resize);
+		resize();
+		animate();
+
+		return () => {
+			window.removeEventListener('resize', resize);
+			cancelAnimationFrame(animationId);
+		};
+	});
+
+	// Gestion des messages et rendus
 	$: if (messages && messages.length > 0 && (messages.at(-1).done ?? false)) {
 		(async () => {
 			await tick();
 			renderLatex();
 			hljs.highlightAll();
-			createCopyCodeBlockButton();
-
-			for (const message of messages) {
-				if (message.info) {
-					tippy(`#info-${message.id}`, {
-						content: `<span class="text-xs">token/s: ${
-							`${
-								Math.round(
-									((message.info.eval_count ?? 0) / (message.info.eval_duration / 1000000000)) * 100
-								) / 100
-							} tokens` ?? "N/A"
-						}<br/>
-						total_duration: ${
-							Math.round(((message.info.total_duration ?? 0) / 1000000) * 100) / 100 ?? "N/A"
-						}ms<br/>
-						load_duration: ${
-							Math.round(((message.info.load_duration ?? 0) / 1000000) * 100) / 100 ?? "N/A"
-						}ms<br/>
-						prompt_eval_count: ${message.info.prompt_eval_count ?? "N/A"}<br/>
-						prompt_eval_duration: ${
-							Math.round(((message.info.prompt_eval_duration ?? 0) / 1000000) * 100) / 100 ?? "N/A"
-						}ms<br/>
-						eval_count: ${message.info.eval_count ?? "N/A"}<br/>
-						eval_duration: ${
-							Math.round(((message.info.eval_duration ?? 0) / 1000000) * 100) / 100 ?? "N/A"
-						}ms</span>`,
-						allowHTML: true
-					});
-				}
-			}
 		})();
 	}
-
-	$: if (autoScroll && bottomPadding) {
-		(async () => {
-			await tick();
-			window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
-		})();
-	}
-
-	const createCopyCodeBlockButton = () => {
-		let blocks = document.querySelectorAll("pre");
-
-		blocks.forEach((block) => {
-			if (navigator.clipboard && block.childNodes.length < 2 && block.id !== "user-message") {
-				let code = block.querySelector("code");
-				code.style.borderTopRightRadius = 0;
-				code.style.borderTopLeftRadius = 0;
-
-				let topBarDiv = document.createElement("div");
-				topBarDiv.style.backgroundColor = "#202123";
-				topBarDiv.style.overflowX = "auto";
-				topBarDiv.style.display = "flex";
-				topBarDiv.style.justifyContent = "space-between";
-				topBarDiv.style.padding = "0 1rem";
-				topBarDiv.style.paddingTop = "4px";
-				topBarDiv.style.borderTopRightRadius = "8px";
-				topBarDiv.style.borderTopLeftRadius = "8px";
-
-				let langDiv = document.createElement("div");
-
-				let codeClassNames = code?.className.split(" ");
-				langDiv.textContent =
-					codeClassNames[0] === "hljs" ? codeClassNames[1].slice(9) : codeClassNames[0].slice(9);
-				langDiv.style.color = "white";
-				langDiv.style.margin = "4px";
-				langDiv.style.fontSize = "0.75rem";
-
-				let button = document.createElement("button");
-				button.textContent = "Copy Code";
-				button.style.background = "none";
-				button.style.fontSize = "0.75rem";
-				button.style.border = "none";
-				button.style.margin = "4px";
-				button.style.cursor = "pointer";
-				button.style.color = "#ddd";
-				button.addEventListener("click", () => copyCode(block, button));
-
-				topBarDiv.appendChild(langDiv);
-				topBarDiv.appendChild(button);
-
-				block.prepend(topBarDiv);
-			}
-		});
-
-		async function copyCode(block, button) {
-			let code = block.querySelector("code");
-			let text = code.innerText;
-			await navigator.clipboard.writeText(text);
-			button.innerText = "Copied!";
-			setTimeout(() => {
-				button.innerText = "Copy Code";
-			}, 1000);
-		}
-	};
 
 	const renderLatex = () => {
 		let chatMessageElements = document.getElementsByClassName("chat-assistant");
 		for (const element of chatMessageElements) {
-			auto_render(element, {
+			auto_render(element as HTMLElement, {
 				delimiters: [
 					{ left: "$$", right: "$$", display: true },
-					{ left: "\\(", right: "\\)", display: true },
-					{ left: "\\[", right: "\\]", display: true }
+					{ left: "\\(", right: "\\)", display: true }
 				],
 				throwOnError: false
 			});
 		}
 	};
-
-	const copyToClipboard = (text) => {
-		if (!navigator.clipboard) {
-			var textArea = document.createElement("textarea");
-			textArea.value = text;
-			textArea.style.top = "0";
-			textArea.style.left = "0";
-			textArea.style.position = "fixed";
-			document.body.appendChild(textArea);
-			textArea.focus();
-			textArea.select();
-			try {
-				document.execCommand("copy");
-			} catch (err) {
-				console.error("Fallback: Oops, unable to copy", err);
-			}
-			document.body.removeChild(textArea);
-			return;
-		}
-		navigator.clipboard.writeText(text).then(
-			function () {
-				toast.success("Copié dans le presse-papier !");
-			},
-			function (err) {
-				console.error("Async: Could not copy text: ", err);
-			}
-		);
-	};
-
-	const editMessageHandler = async (messageId) => {
-		history.messages[messageId].edit = true;
-		history.messages[messageId].originalContent = history.messages[messageId].content;
-		history.messages[messageId].editedContent = history.messages[messageId].content;
-		await tick();
-		const editElement = document.getElementById(`message-edit-${messageId}`);
-		editElement.style.height = "";
-		editElement.style.height = `${editElement.scrollHeight}px`;
-	};
-
-	const confirmEditMessage = async (messageId) => {
-		history.messages[messageId].edit = false;
-		let userPrompt = history.messages[messageId].editedContent;
-		let userMessageId = uuidv4();
-		let userMessage = {
-			id: userMessageId,
-			parentId: history.messages[messageId].parentId,
-			childrenIds: [],
-			role: "user",
-			content: userPrompt,
-			...(history.messages[messageId].files && { files: history.messages[messageId].files })
-		};
-		let messageParentId = history.messages[messageId].parentId;
-		if (messageParentId !== null) {
-			history.messages[messageParentId].childrenIds = [
-				...history.messages[messageParentId].childrenIds,
-				userMessageId
-			];
-		}
-		history.messages[userMessageId] = userMessage;
-		history.currentId = userMessageId;
-		await tick();
-		await sendPrompt(userPrompt, userMessageId, $chatId);
-	};
-
-	const confirmEditResponseMessage = async (messageId) => {
-		history.messages[messageId].edit = false;
-		history.messages[messageId].content = history.messages[messageId].editedContent;
-	};
-
-	const cancelEditMessage = (messageId) => {
-		history.messages[messageId].edit = false;
-		history.messages[messageId].editedContent = undefined;
-	};
-
-	const showPreviousMessage = async (message) => {
-		if (message.parentId !== null) {
-			let messageId =
-				history.messages[message.parentId].childrenIds[
-					Math.max(history.messages[message.parentId].childrenIds.indexOf(message.id) - 1, 0)
-				];
-			if (message.id !== messageId) {
-				let messageChildrenIds = history.messages[messageId].childrenIds;
-				while (messageChildrenIds.length !== 0) {
-					messageId = messageChildrenIds.at(-1);
-					messageChildrenIds = history.messages[messageId].childrenIds;
-				}
-				history.currentId = messageId;
-			}
-		} else {
-			let childrenIds = Object.values(history.messages)
-				.filter((message) => message.parentId === null)
-				.map((message) => message.id);
-			let messageId = childrenIds[Math.max(childrenIds.indexOf(message.id) - 1, 0)];
-			if (message.id !== messageId) {
-				let messageChildrenIds = history.messages[messageId].childrenIds;
-				while (messageChildrenIds.length !== 0) {
-					messageId = messageChildrenIds.at(-1);
-					messageChildrenIds = history.messages[messageId].childrenIds;
-				}
-				history.currentId = messageId;
-			}
-		}
-		await tick();
-		autoScroll = window.innerHeight + window.scrollY >= document.body.offsetHeight - 40;
-		setTimeout(() => {
-			window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
-		}, 100);
-	};
-
-	const showNextMessage = async (message) => {
-		if (message.parentId !== null) {
-			let messageId =
-				history.messages[message.parentId].childrenIds[
-					Math.min(
-						history.messages[message.parentId].childrenIds.indexOf(message.id) + 1,
-						history.messages[message.parentId].childrenIds.length - 1
-					)
-				];
-			if (message.id !== messageId) {
-				let messageChildrenIds = history.messages[messageId].childrenIds;
-				while (messageChildrenIds.length !== 0) {
-					messageId = messageChildrenIds.at(-1);
-					messageChildrenIds = history.messages[messageId].childrenIds;
-				}
-				history.currentId = messageId;
-			}
-		} else {
-			let childrenIds = Object.values(history.messages)
-				.filter((message) => message.parentId === null)
-				.map((message) => message.id);
-			let messageId =
-				childrenIds[Math.min(childrenIds.indexOf(message.id) + 1, childrenIds.length - 1)];
-			if (message.id !== messageId) {
-				let messageChildrenIds = history.messages[messageId].childrenIds;
-				while (messageChildrenIds.length !== 0) {
-					messageId = messageChildrenIds.at(-1);
-					messageChildrenIds = history.messages[messageId].childrenIds;
-				}
-				history.currentId = messageId;
-			}
-		}
-		await tick();
-		autoScroll = window.innerHeight + window.scrollY >= document.body.offsetHeight - 40;
-		setTimeout(() => {
-			window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
-		}, 100);
-	};
 </script>
 
+<div id="galactic-background">
+    <div class="nebula-layer"></div>
+    <canvas id="stars-canvas"></canvas>
+</div>
+
+<div class="relative z-10"> 
 {#if messages.length == 0}
-	<div class="m-auto text-center max-w-md pb-56 px-2">
-		<div class="flex justify-center mt-8">
-			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-20 h-20 text-cyan-400 drop-shadow-[0_0_10px_rgba(0,210,255,0.5)]">
-				<path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.71-2.13 0-3" />
-				<path d="m12 15-3-3m1.35-2.35L15 6.45c.42-.42 1-.65 1.55-.65h4c.55 0 1 .45 1 1v4c0 .55-.23 1.13-.65 1.55L14.25 18.3c-.42.42-1 .65-1.55.65h-4c-.55 0-1-.45-1-1v-4c0-.55.23-1.13.65-1.55Z" />
-				<path d="m15 9 3 3" />
-				<path d="M9.5 14.5c-1.26 1.5-5 2-5 2s.5-3.74 2-5c.84-.71 2.13-.71 3 0" />
-			</svg>
+	<div class="m-auto text-center max-w-md pb-56 px-2 min-h-screen flex flex-col justify-center">
+    <div class="flex justify-center mt-8">
+        <div class="relative group">
+            <div class="absolute -inset-2 bg-gradient-to-br from-cyan-600/30 to-purple-600/20 rounded-full blur-2xl opacity-80 animate-pulse"></div>
+            
+            <img 
+                src="/astrolink.png" 
+                alt="AstroLink Logo" 
+                class="relative w-48 h-48 object-cover drop-shadow-[0_0_15px_rgba(34,211,238,0.6)]" 
+            />
+        </div>
+    </div>
+    
+    <div class=" mt-4 text-sm text-cyan-300/60 font-medium italic">
+        By Marko
+    </div>
+
+		<div class=" mt-6 text-3xl text-cyan-400 font-bold tracking-[0.2em] uppercase drop-shadow-lg">
+			
 		</div>
-		<div class=" mt-4 text-2xl text-cyan-400 font-bold tracking-widest uppercase">
-			La meilleur IA créée par Marko
+		<div class=" mt-2 text-sm text-cyan-300/60 font-medium italic">
+			
 		</div>
 	</div>
 {:else}
-	{#each messages as message, messageIdx}
-		<div class=" w-full">
-			<div class="flex justify-between px-5 mb-3 max-w-3xl mx-auto rounded-lg group">
+	{#each messages as message}
+		<div class=" w-full py-4 {message.role === 'user' ? '' : 'bg-slate-900/40 backdrop-blur-sm border-y border-white/5'}">
+			<div class="flex justify-between px-5 max-w-3xl mx-auto rounded-lg group">
 				<div class=" flex w-full">
 					<div class=" mr-4">
 						{#if message.role === "user"}
-							<img
-								src="/user.png"
-								class=" max-w-[28px] object-cover rounded-full"
-								alt="User profile"
-								draggable="false"
-							/>
+							<img src="/user.png" class=" max-w-[28px] object-cover rounded-full border border-cyan-500/30" alt="User" />
 						{:else}
-							<div class="p-1 bg-gray-800 rounded-full">
+							<div class="p-1 bg-cyan-900/50 rounded-full border border-cyan-400/50 shadow-[0_0_10px_rgba(34,211,238,0.3)]">
 								<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-[20px] h-[20px] text-cyan-400">
 									<path d="m12 15-3-3m1.35-2.35L15 6.45c.42-.42 1-.65 1.55-.65h4c.55 0 1 .45 1 1v4c0 .55-.23 1.13-.65 1.55L14.25 18.3c-.42.42-1 .65-1.55.65h-4c-.55 0-1-.45-1-1v-4c0-.55.23-1.13.65-1.55Z" />
 								</svg>
 							</div>
 						{/if}
 					</div>
-
-					<div class="w-full overflow-hidden">
-						<div class=" self-center font-bold mb-0.5">
-							{#if message.role === "user"}
-								You
+					<div class="w-full overflow-hidden text-slate-100">
+						<div class=" self-center font-bold mb-0.5 {message.role === 'user' ? 'text-white' : 'text-cyan-300'}">
+							{#if message.role === "user"} You {:else} AstroLink {/if}
+						</div>
+						
+						<div class="prose chat-{message.role} w-full max-w-full dark:prose-invert whitespace-pre-line">
+							{#if message.role === "assistant"}
+								{@html marked(message.content)}
 							{:else}
-								AstroLink <span class=" text-gray-500 text-sm font-medium"
-									>{message.model ? ` ${message.model}` : ""}</span
-								>
+								{#if message.content.includes('FILE:') && message.content.includes('QUERY:')}
+									{@const parts = message.content.split('\nQUERY:')}
+									{@const fileHeader = parts[0].split('\n')[0]}
+									{@const fileName = fileHeader.replace('FILE:', '')}
+									{@const userText = parts[1] || ""}
+
+									<div class="flex items-center bg-cyan-900/40 border border-cyan-500/30 rounded-lg px-3 py-1.5 mb-2 w-fit text-xs text-cyan-300">
+										<span class="mr-2">📄 {fileName}</span>
+									</div>
+									<div class="font-sans text-slate-100">{userText}</div>
+								{:else}
+									<pre id="user-message" class="bg-transparent p-0 m-0 text-slate-100 font-sans">{message.content}</pre>
+								{/if}
 							{/if}
 						</div>
-
-						{#if message.role !== "user" && message.content === ""}
-							<div class="w-full mt-3">
-								<div class="animate-pulse flex w-full">
-									<div class="space-y-2 w-full">
-										<div class="h-2 bg-gray-200 dark:bg-gray-600 rounded mr-14" />
-										<div class="grid grid-cols-3 gap-4">
-											<div class="h-2 bg-gray-200 dark:bg-gray-600 rounded col-span-2" />
-											<div class="h-2 bg-gray-200 dark:bg-gray-600 rounded col-span-1" />
-										</div>
-										<div class="h-2 bg-gray-200 dark:bg-gray-600 rounded" />
-									</div>
-								</div>
-							</div>
-						{:else}
-							<div
-								class="prose chat-{message.role} w-full max-w-full dark:prose-invert whitespace-pre-line"
-							>
-								{#if message.role == "user"}
-									{#if message.files}
-										<div class="my-3 w-full flex overflow-x-auto space-x-2">
-											{#each message.files as file}
-												<div>
-													{#if file.type === "image"}
-														<img
-															src={file.url}
-															alt="input"
-															class=" max-h-96 rounded-lg"
-															draggable="false"
-														/>
-													{/if}
-												</div>
-											{/each}
-										</div>
-									{/if}
-
-									{#if message?.edit === true}
-										<div class=" w-full">
-											<textarea
-												id="message-edit-{message.id}"
-												class=" bg-transparent outline-none w-full resize-none"
-												bind:value={history.messages[message.id].editedContent}
-												on:input={(e) => {
-													e.target.style.height = `${e.target.scrollHeight}px`;
-												}}
-											/>
-											<div class=" mt-2 mb-1 flex justify-center space-x-2 text-sm font-medium">
-												<button
-													class="px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-gray-100 transition rounded-lg"
-													on:click={() => confirmEditMessage(message.id)}
-												>
-													Save & Submit
-												</button>
-												<button
-													class=" px-4 py-2 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-100 transition outline outline-1 outline-gray-600 rounded-lg"
-													on:click={() => cancelEditMessage(message.id)}
-												>
-													Cancel
-												</button>
-											</div>
-										</div>
-									{:else}
-										<div class="w-full">
-											<pre id="user-message">{message.content}</pre>
-											<div class=" flex justify-start space-x-1">
-												<button
-													class="invisible group-hover:visible p-1 rounded dark:hover:bg-gray-800 transition"
-													on:click={() => editMessageHandler(message.id)}
-												>
-													<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-														<path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125" />
-													</svg>
-												</button>
-											</div>
-										</div>
-									{/if}
-								{/if}
-
-								{#if message.role === "assistant"}
-									<div class="w-full">
-										{#if message?.edit === true}
-											<div class=" w-full">
-												<textarea
-													id="message-edit-{message.id}"
-													class=" bg-transparent outline-none w-full resize-none"
-													bind:value={history.messages[message.id].editedContent}
-													on:input={(e) => {
-														e.target.style.height = `${e.target.scrollHeight}px`;
-													}}
-												/>
-												<div class=" mt-2 mb-1 flex justify-center space-x-2 text-sm font-medium">
-													<button class="px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-gray-100 transition rounded-lg" on:click={() => confirmEditResponseMessage(message.id)}>Save</button>
-													<button class=" px-4 py-2 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-100 transition outline outline-1 outline-gray-600 rounded-lg" on:click={() => cancelEditMessage(message.id)}>Cancel</button>
-												</div>
-											</div>
-										{:else if message?.error === true}
-											<div class="flex mt-2 mb-4 space-x-2 border px-4 py-3 border-red-800 bg-red-800/30 font-medium rounded-lg">
-												<div class=" self-center">{message.content}</div>
-											</div>
-										{:else}
-											{@html marked(message.content.replace("\\\\", "\\\\\\"))}
-										{/if}
-
-										{#if message.done}
-											<div class=" flex justify-start space-x-1 -mt-2">
-												<button
-													class="p-1 rounded dark:hover:bg-gray-800 transition"
-													on:click={() => copyToClipboard(message.content)}
-												>
-													<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-														<path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0013.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 01-.75.75H9a.75.75 0 01-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 01-2.25 2.25H6.75A2.25 2.25 0 014.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 011.927-.184" />
-													</svg>
-												</button>
-												{#if messageIdx + 1 === messages.length}
-													<button type="button" class="p-1 rounded dark:hover:bg-gray-800 transition" on:click={regenerateResponse}>
-														<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-															<path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
-														</svg>
-													</button>
-												{/if}
-											</div>
-										{/if}
-									</div>
-								{/if}
-							</div>
-						{/if}
 					</div>
 				</div>
 			</div>
 		</div>
 	{/each}
-	{#if bottomPadding}
-		<div class=" mb-10" />
-	{/if}
+	{#if bottomPadding} <div class=" mb-24" /> {/if}
 {/if}
+</div>
+
+<style>
+	.uppercase:hover {
+		text-shadow: 0 0 20px rgba(34, 211, 238, 0.8);
+		transition: all 0.3s ease;
+	}
+</style>

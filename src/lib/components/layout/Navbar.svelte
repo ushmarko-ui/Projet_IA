@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { v4 as uuidv4 } from "uuid";
-
 	import { goto } from "$app/navigation";
 	import { chatId, db } from "$lib/stores";
 
@@ -9,39 +8,47 @@
 
 <nav
 	id="nav"
-	class=" fixed py-2.5 top-0 flex flex-row justify-center bg-white/95 dark:bg-gray-800/90 dark:text-gray-200 backdrop-blur-xl w-screen z-30"
+	class="fixed top-0 flex flex-row justify-center w-screen z-30 bg-transparent"
 >
-	<div class=" flex max-w-3xl w-full mx-auto px-3">
+	<div class="absolute inset-0 bg-gradient-to-b from-slate-950/80 to-transparent h-20 pointer-events-none"></div>
+
+	<div class="relative flex max-w-3xl w-full mx-auto px-3 py-2.5 z-10">
 		<div class="flex w-full max-w-full">
 			<div class="pr-2 self-center">
 				<button
-					class=" cursor-pointer p-1 flex dark:hover:bg-gray-700 rounded-lg transition"
+					class="cursor-pointer p-1 flex items-center group transition"
 					on:click={async () => {
 						console.log("newChat");
 						goto("/");
 						await chatId.set(uuidv4());
 					}}
 				>
-					<div class=" m-auto self-center">
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							viewBox="0 0 20 20"
-							fill="currentColor"
-							class="w-5 h-5"
-						>
-							<path
-								d="M5.433 13.917l1.262-3.155A4 4 0 017.58 9.42l6.92-6.918a2.121 2.121 0 013 3l-6.92 6.918c-.383.383-.84.685-1.343.886l-3.154 1.262a.5.5 0 01-.65-.65z"
-							/>
-							<path
-								d="M3.5 5.75c0-.69.56-1.25 1.25-1.25H10A.75.75 0 0010 3H4.75A2.75 2.75 0 002 5.75v9.5A2.75 2.75 0 004.75 18h9.5A2.75 2.75 0 0017 15.25V10a.75.75 0 00-1.5 0v5.25c0 .69-.56 1.25-1.25 1.25h-9.5c-.69 0-1.25-.56-1.25-1.25v-9.5z"
-							/>
-						</svg>
+					<div class="relative flex items-center">
+						<div class="absolute -inset-1 bg-cyan-500/30 rounded-full blur opacity-0 group-hover:opacity-100 transition duration-500"></div>
+						
+						<img 
+							src="/astrolink.png" 
+							alt="AstroLink Logo" 
+							class="relative w-8 h-8 object-cover rounded-full border border-cyan-400/40 shadow-[0_0_15px_rgba(34,211,238,0.2)]"
+						/>
+						
+						<span class="ml-2 text-[10px] font-black tracking-widest text-cyan-400/60 uppercase">
+							v1.0
+						</span>
 					</div>
 				</button>
 			</div>
-			<div class=" flex-1 self-center font-medium text-ellipsis whitespace-nowrap overflow-hidden">
+
+			<div class="flex-1 self-center font-bold text-sm tracking-wide text-cyan-100/90 text-ellipsis whitespace-nowrap overflow-hidden">
 				{title != "" ? title : "AstroLink"}
 			</div>
 		</div>
 	</div>
 </nav>
+
+<style>
+	/* On s'assure que le titre a une petite lueur pour ressortir sur les étoiles */
+	.text-cyan-100\/90 {
+		text-shadow: 0 0 10px rgba(34, 211, 238, 0.3);
+	}
+</style>

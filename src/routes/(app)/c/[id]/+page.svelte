@@ -260,7 +260,7 @@
 										`Ollama - ${model}`,
 										{
 											body: responseMessage.content,
-											icon: '/favicon.png'
+											icon: '/astrolink.png'
 										}
 									);
 								}

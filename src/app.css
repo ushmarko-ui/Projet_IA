@@ -1,61 +1,68 @@
+/* --- POLICES --- */
 @font-face {
-	font-family: "Arimo";
-	src: url("/assets/fonts/Arimo-Variable.ttf");
-	font-display: swap;
+    font-family: "Arimo";
+    src: url("/assets/fonts/Arimo-Variable.ttf");
+    font-display: swap;
 }
 
-@font-face {
-	font-family: "Mona Sans";
-	src: url("/assets/fonts/Mona-Sans.woff2");
-	font-display: swap;
+/* --- FORCE LA TRANSPARENCE --- */
+:root, body, html, #app, main, .layout, .page, .w-full, .h-screen, 
+.bg-white, .bg-gray-900, .bg-slate-900, .dark\:bg-gray-900 {
+    background-color: transparent !important;
 }
 
+/* Sécurité : Si l'image bug, l'écran sera noir, pas blanc */
 html {
-	word-break: break-word;
+    background-color: #020617 !important;
 }
 
-code {
-	/* white-space-collapse: preserve !important; */
-	white-space: pre;
-	width: auto;
+/* --- FOND COMPOSITE --- */
+#galactic-background {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    z-index: -100 !important;
+    pointer-events: none;
+    overflow: hidden;
 }
 
-math {
-	margin-top: 1rem;
+.nebula-layer {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    /* VERIFIE BIEN LE NOM ICI 👇 */
+    background-image: url('/GALAXIE.png') !important; 
+    background-size: cover !important;
+    background-position: center !important;
+    filter: brightness(0.5) contrast(1.1);
 }
 
-.hljs {
-	@apply rounded-lg;
+#stars-canvas {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
 }
 
-::-webkit-scrollbar-thumb {
-	--tw-border-opacity: 1;
-	background-color: rgba(217, 217, 227, 0.8);
-	border-color: rgba(255, 255, 255, var(--tw-border-opacity));
-	border-radius: 9999px;
-	border-width: 1px;
+/* --- SIDEBAR --- */
+.dark .bg-gray-950, aside {
+    background-color: rgba(7, 10, 25, 0.8) !important;
+    backdrop-filter: blur(10px);
 }
 
-::-webkit-scrollbar {
-	height: 0.45rem;
-	width: 0.35rem;
+
+/* Animation de propulsion (pulse + légère secousse) */
+@keyframes rocket-blast {
+  0% { transform: scale(1); filter: brightness(1); }
+  50% { transform: scale(1.05); filter: brightness(1.5) drop-shadow(0 0 15px #22d3ee); }
+  100% { transform: scale(1); filter: brightness(1); }
 }
 
-::-webkit-scrollbar-track {
-	background-color: transparent;
-	border-radius: 9999px;
-}
-
-select {
-	background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236B7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3E%3C/svg%3E");
-	background-position: right 0.5rem center;
-	background-repeat: no-repeat;
-	background-size: 1.5em 1.5em;
-	padding-right: 2.5rem;
-	-webkit-print-color-adjust: exact;
-	print-color-adjust: exact;
-	/* for Firefox */
-	-moz-appearance: none;
-	/* for Chrome */
-	-webkit-appearance: none;
+.sending-animation {
+  animation: rocket-blast 0.4s ease-out;
 }
