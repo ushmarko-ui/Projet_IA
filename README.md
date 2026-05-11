@@ -22,15 +22,6 @@ Vous pouvez visualiser l'interface utilisateur et explorer le design directement
 - ⚡ **Performance** : Construit avec SvelteKit pour une navigation instantanée.
 - 🛠️ **Gestion des Modèles** : Interface prévue pour lister, sélectionner et discuter avec différents modèles d'IA.
 
-## ⚙️ Comment utiliser l'IA en local ?
-
-L'aperçu ci-dessus permet de voir l'interface. Pour que l'IA puisse vous répondre, vous devez :
-
-1. Installer [Ollama](https://ollama.ai/) sur votre ordinateur.
-2. Lancer un modèle (ex: `ollama run llama3`).
-3. L'interface se connectera automatiquement à votre API locale sur `http://localhost:11434`.
-
-## 🛠️ Installation (Développement)
 
 
 
