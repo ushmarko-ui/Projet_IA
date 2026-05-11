@@ -1,4 +1,4 @@
-import adapter from '@sveltejs/adapter-auto'; // On repasse en auto pour Vercel
+import adapter from '@sveltejs/adapter-auto';
 import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 
 /** @type {import('@sveltejs/kit').Config} */
@@ -7,10 +7,7 @@ const config = {
 
 	kit: {
 		adapter: adapter(),
-		// On supprime les réglages "paths" et "base" qui causaient l'erreur
-		prerender: {
-			handleHttpError: 'warn'
-		}
+		// On retire complètement prerender pour laisser Vercel gérer
 	}
 };
 
