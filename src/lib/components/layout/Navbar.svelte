@@ -28,10 +28,10 @@
 						<div class="absolute -inset-1 bg-cyan-500/30 rounded-full blur opacity-0 group-hover:opacity-100 transition duration-500"></div>
 						
 						<img 
-							src="/astrolink.png" 
-							alt="AstroLink Logo" 
-							class="relative w-8 h-8 object-cover rounded-full border border-cyan-400/40 shadow-[0_0_15px_rgba(34,211,238,0.2)]"
-						/>
+    src="{base}/astrolink.png" 
+    alt="AstroLink Logo" 
+    class="relative w-8 h-8 object-cover rounded-full border border-cyan-500/50" 
+/>
 						
 						<span class="ml-2 text-[10px] font-black tracking-widest text-cyan-400/60 uppercase">
 							v1.0
