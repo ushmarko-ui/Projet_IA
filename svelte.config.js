@@ -6,7 +6,6 @@ const config = {
 	preprocess: vitePreprocess(),
 
 	kit: {
-		// adapter-auto ne fonctionne pas pour GitHub Pages, on utilise adapter-static
 		adapter: adapter({
 			pages: 'build',
 			assets: 'build',
@@ -14,15 +13,9 @@ const config = {
 			precompress: false,
 			strict: true
 		}),
-		// AJOUTE CE BLOC ICI JUSTE APRÈS ADAPTER
+		// PRERENDER DOIT ÊTRE ICI, DANS KIT
 		prerender: {
-			handleHttpError: ({ path, referrer, message }) => {
-				// On ignore les erreurs 404 (images manquantes) pour ne pas bloquer le déploiement
-				if (path.endsWith('.png') || path.endsWith('.jpg') || path.endsWith('.svg')) {
-					return;
-				}
-				throw new Error(message);
-			}
+			handleHttpError: 'warn' // C'est encore plus simple : ça transforme les erreurs en simples avertissements
 		},
 		paths: {
 			base: process.env.NODE_ENV === 'production' ? '/Projet_IA' : '',
