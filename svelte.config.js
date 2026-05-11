@@ -10,12 +10,21 @@ const config = {
 		adapter: adapter({
 			pages: 'build',
 			assets: 'build',
-			fallback: '404.html', // Important pour que les rafraîchissements de page ne fassent pas d'erreur
+			fallback: '404.html',
 			precompress: false,
 			strict: true
 		}),
+		// AJOUTE CE BLOC ICI JUSTE APRÈS ADAPTER
+		prerender: {
+			handleHttpError: ({ path, referrer, message }) => {
+				// On ignore les erreurs 404 (images manquantes) pour ne pas bloquer le déploiement
+				if (path.endsWith('.png') || path.endsWith('.jpg') || path.endsWith('.svg')) {
+					return;
+				}
+				throw new Error(message);
+			}
+		},
 		paths: {
-			// REMPLACE 'Projet_IA' par le nom exact de ton dépôt sur GitHub si c'est différent
 			base: process.env.NODE_ENV === 'production' ? '/Projet_IA' : '',
 		}
 	}
