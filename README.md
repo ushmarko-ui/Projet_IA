@@ -32,14 +32,7 @@ L'aperçu ci-dessus permet de voir l'interface. Pour que l'IA puisse vous répon
 
 ## 🛠️ Installation (Développement)
 
-Si vous souhaitez modifier le code sur votre machine :
 
-```bash
-# Cloner le projet
-git clone [https://github.com/ushmarko-ui/Projet_IA.git](https://github.com/ushmarko-ui/Projet_IA.git)
-
-# Installer les dépendances
-npm install
 
 # Lancer en mode développement
 npm run dev
