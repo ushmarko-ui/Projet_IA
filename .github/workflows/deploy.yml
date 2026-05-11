@@ -31,6 +31,7 @@ jobs:
       - name: Upload Artifacts
         uses: actions/upload-pages-artifact@v3
         with:
+          # On vérifie que c'est bien le dossier 'build' (configuré dans ton svelte.config.js)
           path: 'build/'
 
   deploy:
