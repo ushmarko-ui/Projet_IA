@@ -99,28 +99,28 @@
 </script>
 
 <div id="galactic-background">
-    <div class="nebula-layer"></div>
-    <canvas id="stars-canvas"></canvas>
+	<div class="nebula-layer"></div>
+	<canvas id="stars-canvas"></canvas>
 </div>
 
 <div class="relative z-10"> 
 {#if messages.length == 0}
 	<div class="m-auto text-center max-w-md pb-56 px-2 min-h-screen flex flex-col justify-center">
-        <div class="flex justify-center mt-8">
-            <div class="relative group">
-                <div class="absolute -inset-2 bg-gradient-to-br from-cyan-600/30 to-purple-600/20 rounded-full blur-2xl opacity-80 animate-pulse"></div>
-                
-                <img 
-                    src="{base}/astrolink.png" 
-                    alt="AstroLink Logo" 
-                    class="relative w-48 h-48 object-cover drop-shadow-[0_0_15px_rgba(34,211,238,0.6)]" 
-                />
-            </div>
-        </div>
-        
-        <div class="mt-4 text-sm text-cyan-300/60 font-medium italic">
-            By Marko
-        </div>
+		<div class="flex justify-center mt-8">
+			<div class="relative group">
+				<div class="absolute -inset-2 bg-gradient-to-br from-cyan-600/30 to-purple-600/20 rounded-full blur-2xl opacity-80 animate-pulse"></div>
+				
+				<img 
+					src="{base}/astrolink.png" 
+					alt="AstroLink Logo" 
+					class="relative w-48 h-48 object-cover drop-shadow-[0_0_15px_rgba(34,211,238,0.6)]" 
+				/>
+			</div>
+		</div>
+		
+		<div class="mt-4 text-sm text-cyan-300/60 font-medium italic">
+			By Marko
+		</div>
 	</div>
 {:else}
 	{#each messages as message}
