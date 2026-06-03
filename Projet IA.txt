@@ -1,0 +1,8 @@
+Projet IA: 
+
+Ce projet vise à développer une intelligence artificiel (du type chatgpt ou encore gemini) de A a Z en reprenant un code open source. 
+
+-l'ia serait sous forme de chat gratuit avec autant de piece de jointes que l'on veut 
+-on pourra parler avec elle, et son avatar sera une ia du type Cortana dans halo. 
+-il faudra que l'interface soit user-friendly (que ça soit simple d'accès). 
+-
