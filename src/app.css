@@ -1,22 +1,70 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap');
+ 
 /* --- POLICES --- */
 @font-face {
     font-family: "Arimo";
     src: url("/assets/fonts/Arimo-Variable.ttf");
     font-display: swap;
 }
-
-/* --- FORCE LA TRANSPARENCE --- */
-:root, body, html, #app, main, .layout, .page, .w-full, .h-screen, 
+ 
+/* --- CSS VARIABLES FUTURISTES --- */
+:root {
+    --cyan-primary: #00f5ff;
+    --cyan-glow: rgba(0, 245, 255, 0.4);
+    --purple-accent: #7c3aed;
+    --blue-deep: #0a0f1e;
+    --glass-bg: rgba(5, 10, 30, 0.75);
+    --glass-border: rgba(0, 245, 255, 0.15);
+    --text-primary: rgba(224, 240, 255, 0.95);
+    --text-muted: rgba(100, 180, 220, 0.7);
+    --neon-pulse: 0 0 10px var(--cyan-glow), 0 0 30px rgba(0, 245, 255, 0.2);
+}
+ 
+/* --- RESET BACKGROUNDS --- */
+:root, body, html, #app, main, .layout, .page, .w-full, .h-screen,
 .bg-white, .bg-gray-900, .bg-slate-900, .dark\:bg-gray-900 {
     background-color: transparent !important;
+    font-family: 'Rajdhani', 'Arimo', sans-serif;
 }
-
-/* Sécurité : Si l'image bug, l'écran sera noir, pas blanc */
+ 
 html {
     background-color: #020617 !important;
+    cursor: none;
 }
-
-/* --- FOND COMPOSITE --- */
+ 
+/* --- CURSEUR PERSONNALISÉ --- */
+*, *::before, *::after {
+    cursor: none !important;
+    box-sizing: border-box;
+}
+ 
+.custom-cursor {
+    position: fixed;
+    width: 12px;
+    height: 12px;
+    background: var(--cyan-primary);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 99999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s ease, width 0.2s, height 0.2s, background 0.2s;
+    box-shadow: 0 0 10px var(--cyan-primary), 0 0 30px rgba(0, 245, 255, 0.5);
+    mix-blend-mode: screen;
+}
+ 
+.custom-cursor-ring {
+    position: fixed;
+    width: 36px;
+    height: 36px;
+    border: 1px solid rgba(0, 245, 255, 0.5);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 99998;
+    transform: translate(-50%, -50%);
+    transition: transform 0.15s ease, width 0.3s, height 0.3s;
+}
+ 
+/* --- FOND GALACTIQUE --- */
 #galactic-background {
     position: fixed !important;
     top: 0 !important;
@@ -27,42 +75,568 @@ html {
     pointer-events: none;
     overflow: hidden;
 }
-
+ 
 .nebula-layer {
     position: absolute !important;
-    top: 0 !important;
-    left: 0 !important;
-    width: 100% !important;
-    height: 100% !important;
-    /* VERIFIE BIEN LE NOM ICI 👇 */
-    background-image: url('/GALAXIE.png') !important; 
+    inset: 0 !important;
+    background-image: url('/GALAXIE.png') !important;
     background-size: cover !important;
     background-position: center !important;
-    filter: brightness(0.5) contrast(1.1);
+    filter: brightness(0.35) saturate(1.4) contrast(1.2);
+    animation: nebula-drift 60s ease-in-out infinite alternate;
 }
-
+ 
+@keyframes nebula-drift {
+    0% { transform: scale(1) translate(0, 0); }
+    100% { transform: scale(1.05) translate(-15px, -10px); }
+}
+ 
+/* Overlay gradient futuriste */
+#galactic-background::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: 
+        radial-gradient(ellipse 80% 50% at 50% 0%, rgba(0, 50, 100, 0.3) 0%, transparent 70%),
+        radial-gradient(ellipse 60% 40% at 80% 100%, rgba(100, 0, 200, 0.15) 0%, transparent 60%),
+        linear-gradient(180deg, rgba(2, 6, 23, 0.2) 0%, transparent 40%, rgba(2, 6, 23, 0.4) 100%);
+    pointer-events: none;
+}
+ 
 #stars-canvas {
     position: absolute !important;
-    top: 0 !important;
-    left: 0 !important;
+    inset: 0 !important;
     width: 100% !important;
     height: 100% !important;
 }
-
-/* --- SIDEBAR --- */
+ 
+/* --- GRILLE HOLOGRAPHIQUE --- */
+.holo-grid {
+    position: fixed;
+    inset: 0;
+    background-image: 
+        linear-gradient(rgba(0, 245, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 245, 255, 0.03) 1px, transparent 1px);
+    background-size: 50px 50px;
+    pointer-events: none;
+    z-index: -1;
+    animation: grid-pulse 8s ease-in-out infinite;
+}
+ 
+@keyframes grid-pulse {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+}
+ 
+/* --- LIGNES DE SCAN --- */
+.scanline {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0, 245, 255, 0.01) 2px,
+        rgba(0, 245, 255, 0.01) 4px
+    );
+    pointer-events: none;
+    z-index: 9000;
+    animation: scanline-move 8s linear infinite;
+    opacity: 0.4;
+}
+ 
+@keyframes scanline-move {
+    0% { background-position: 0 0; }
+    100% { background-position: 0 100px; }
+}
+ 
+/* --- SIDEBAR HOLOGRAPHIQUE --- */
 .dark .bg-gray-950, aside {
-    background-color: rgba(7, 10, 25, 0.8) !important;
+    background: rgba(3, 7, 20, 0.85) !important;
+    backdrop-filter: blur(20px) saturate(1.5);
+    border-right: 1px solid var(--glass-border) !important;
+    box-shadow: 4px 0 30px rgba(0, 245, 255, 0.05), inset -1px 0 0 rgba(0, 245, 255, 0.1);
+}
+ 
+/* Items sidebar */
+aside button, aside a {
+    transition: all 0.2s ease !important;
+    border-radius: 6px;
+    position: relative;
+    overflow: hidden;
+}
+ 
+aside button:hover, aside a:hover {
+    background: rgba(0, 245, 255, 0.08) !important;
+    color: var(--cyan-primary) !important;
+}
+ 
+aside button:hover::before, aside a:hover::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 2px;
+    background: var(--cyan-primary);
+    box-shadow: 0 0 8px var(--cyan-primary);
+}
+ 
+/* --- NAVBAR FUTURISTE --- */
+nav {
+    background: transparent !important;
     backdrop-filter: blur(10px);
 }
-
-
-/* Animation de propulsion (pulse + légère secousse) */
+ 
+nav::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 10%;
+    right: 10%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--cyan-glow), transparent);
+    animation: nav-line-pulse 3s ease-in-out infinite;
+}
+ 
+@keyframes nav-line-pulse {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 1; }
+}
+ 
+/* --- MESSAGES FUTURISTES --- */
+/* Message utilisateur */
+.chat-user {
+    position: relative;
+}
+ 
+.chat-user::before {
+    content: '';
+    position: absolute;
+    left: -8px;
+    top: 8px;
+    bottom: 8px;
+    width: 2px;
+    background: linear-gradient(180deg, var(--cyan-primary), transparent);
+    border-radius: 2px;
+}
+ 
+/* Message assistant */
+.chat-assistant {
+    position: relative;
+    animation: message-appear 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+ 
+@keyframes message-appear {
+    0% { opacity: 0; transform: translateY(10px) scale(0.98); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+ 
+/* Bulles de messages */
+.dark .bg-gray-850, 
+.dark\:bg-gray-850,
+.rounded-2xl.bg-gray-50 {
+    background: rgba(0, 20, 50, 0.6) !important;
+    border: 1px solid rgba(0, 245, 255, 0.1) !important;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3), inset 0 0 0 1px rgba(0, 245, 255, 0.05);
+}
+ 
+/* --- INPUT FUTURISTE --- */
+#chat-textarea,
+textarea {
+    background: transparent !important;
+    border: none !important;
+    color: var(--text-primary) !important;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1rem;
+    letter-spacing: 0.02em;
+    resize: none;
+}
+ 
+#chat-textarea::placeholder,
+textarea::placeholder {
+    color: rgba(0, 245, 255, 0.3) !important;
+    font-style: italic;
+}
+ 
+/* Conteneur input */
+.dark\:bg-gray-800\/50,
+form.flex.flex-col {
+    background: rgba(3, 10, 30, 0.7) !important;
+    border: 1px solid rgba(0, 245, 255, 0.2) !important;
+    backdrop-filter: blur(20px) !important;
+    box-shadow: 
+        0 0 0 1px rgba(0, 245, 255, 0.05),
+        0 4px 40px rgba(0, 0, 0, 0.5),
+        inset 0 0 30px rgba(0, 245, 255, 0.03) !important;
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+ 
+.dark\:bg-gray-800\/50:focus-within,
+form.flex.flex-col:focus-within {
+    border-color: rgba(0, 245, 255, 0.5) !important;
+    box-shadow: 
+        0 0 0 1px rgba(0, 245, 255, 0.2),
+        0 0 20px rgba(0, 245, 255, 0.1),
+        0 4px 40px rgba(0, 0, 0, 0.5),
+        inset 0 0 30px rgba(0, 245, 255, 0.05) !important;
+}
+ 
+/* Barre de progression input */
+.dark\:bg-gray-800\/50::after,
+form.flex.flex-col::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 1px;
+    width: 0;
+    background: linear-gradient(90deg, transparent, var(--cyan-primary), transparent);
+    transition: width 0.5s ease;
+}
+ 
+.dark\:bg-gray-800\/50:focus-within::after,
+form.flex.flex-col:focus-within::after {
+    width: 100%;
+}
+ 
+/* --- BOUTON ENVOI FUTURISTE --- */
+button[type="submit"],
+.send-button {
+    background: transparent !important;
+    border: 1px solid rgba(0, 245, 255, 0.4) !important;
+    color: var(--cyan-primary) !important;
+    transition: all 0.2s ease !important;
+    border-radius: 8px;
+    position: relative;
+    overflow: hidden;
+}
+ 
+button[type="submit"]::before,
+.send-button::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 245, 255, 0.1);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s ease;
+}
+ 
+button[type="submit"]:hover::before,
+.send-button:hover::before {
+    transform: scaleX(1);
+}
+ 
+button[type="submit"]:hover,
+.send-button:hover {
+    box-shadow: 0 0 15px rgba(0, 245, 255, 0.3) !important;
+}
+ 
+/* --- ANIMATION BLAST (envoi) --- */
 @keyframes rocket-blast {
-  0% { transform: scale(1); filter: brightness(1); }
-  50% { transform: scale(1.05); filter: brightness(1.5) drop-shadow(0 0 15px #22d3ee); }
-  100% { transform: scale(1); filter: brightness(1); }
+    0% { transform: scale(1); filter: brightness(1); }
+    30% { transform: scale(0.9) translateY(2px); filter: brightness(2) drop-shadow(0 0 15px #00f5ff); }
+    60% { transform: scale(1.1) translateY(-3px); filter: brightness(2.5) drop-shadow(0 0 30px #00f5ff); }
+    100% { transform: scale(1); filter: brightness(1); }
 }
-
+ 
 .sending-animation {
-  animation: rocket-blast 0.4s ease-out;
+    animation: rocket-blast 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97);
 }
+ 
+/* --- TYPING INDICATOR FUTURISTE --- */
+.typing-indicator {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    padding: 12px 16px;
+}
+ 
+.typing-dot {
+    width: 6px;
+    height: 6px;
+    background: var(--cyan-primary);
+    border-radius: 50%;
+    animation: typing-pulse 1.4s ease-in-out infinite;
+    box-shadow: 0 0 8px var(--cyan-primary);
+}
+ 
+.typing-dot:nth-child(2) { animation-delay: 0.2s; }
+.typing-dot:nth-child(3) { animation-delay: 0.4s; }
+ 
+@keyframes typing-pulse {
+    0%, 100% { opacity: 0.3; transform: scale(0.8); }
+    50% { opacity: 1; transform: scale(1.2); box-shadow: 0 0 15px var(--cyan-primary); }
+}
+ 
+/* --- SCROLLBAR FUTURISTE --- */
+::-webkit-scrollbar {
+    width: 3px;
+    height: 3px;
+}
+ 
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+ 
+::-webkit-scrollbar-thumb {
+    background: rgba(0, 245, 255, 0.3);
+    border-radius: 10px;
+}
+ 
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 245, 255, 0.6);
+}
+ 
+/* --- TEXTES --- */
+* {
+    color: var(--text-primary);
+}
+ 
+h1, h2, h3 {
+    font-family: 'Orbitron', sans-serif;
+    letter-spacing: 0.05em;
+}
+ 
+code, pre {
+    font-family: 'Share Tech Mono', monospace;
+    background: rgba(0, 245, 255, 0.05) !important;
+    border: 1px solid rgba(0, 245, 255, 0.1) !important;
+}
+ 
+/* --- BOUTONS GENERIQUES --- */
+button {
+    transition: all 0.2s ease !important;
+    font-family: 'Rajdhani', sans-serif !important;
+    font-weight: 500 !important;
+    letter-spacing: 0.05em !important;
+}
+ 
+button:hover {
+    text-shadow: 0 0 8px currentColor;
+}
+ 
+/* --- AVATAR IA (SIRI-LIKE) — dans Messages.svelte --- */
+.ai-avatar-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 32px;
+    height: 32px;
+    position: relative;
+}
+ 
+.ai-orb {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 40% 35%, rgba(100, 220, 255, 0.9), rgba(0, 100, 200, 0.8));
+    box-shadow: 0 0 15px rgba(0, 200, 255, 0.7), 0 0 40px rgba(0, 150, 255, 0.3);
+    animation: orb-breathe 3s ease-in-out infinite;
+    position: relative;
+}
+ 
+.ai-orb::after {
+    content: '';
+    position: absolute;
+    inset: 3px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.5), transparent 60%);
+}
+ 
+@keyframes orb-breathe {
+    0%, 100% { 
+        transform: scale(1);
+        box-shadow: 0 0 15px rgba(0, 200, 255, 0.7), 0 0 40px rgba(0, 150, 255, 0.3);
+    }
+    50% { 
+        transform: scale(1.08);
+        box-shadow: 0 0 25px rgba(0, 245, 255, 0.9), 0 0 60px rgba(0, 200, 255, 0.5), 0 0 100px rgba(0, 150, 255, 0.2);
+    }
+}
+ 
+/* Orbe en mode thinking */
+.ai-orb.thinking {
+    animation: orb-think 0.8s ease-in-out infinite;
+}
+ 
+@keyframes orb-think {
+    0%, 100% { 
+        transform: scale(1);
+        background: radial-gradient(circle at 40% 35%, rgba(100, 220, 255, 0.9), rgba(0, 100, 200, 0.8));
+    }
+    25% { 
+        transform: scale(1.1);
+        background: radial-gradient(circle at 60% 40%, rgba(180, 100, 255, 0.9), rgba(80, 0, 200, 0.8));
+    }
+    50% { 
+        transform: scale(1.15);
+        background: radial-gradient(circle at 50% 30%, rgba(255, 150, 100, 0.9), rgba(200, 50, 0, 0.8));
+    }
+    75% { 
+        transform: scale(1.1);
+        background: radial-gradient(circle at 30% 60%, rgba(100, 255, 200, 0.9), rgba(0, 180, 100, 0.8));
+    }
+}
+ 
+/* --- SIRI-WAVE ORBE (dans la page conversation) --- */
+.siri-orb-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80px;
+    width: 80px;
+    position: relative;
+}
+ 
+.siri-orb-main {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 40% 35%, 
+        rgba(120, 230, 255, 0.95), 
+        rgba(0, 120, 220, 0.9) 50%, 
+        rgba(80, 0, 180, 0.8));
+    box-shadow: 
+        0 0 20px rgba(0, 200, 255, 0.8),
+        0 0 60px rgba(0, 150, 255, 0.4),
+        0 0 100px rgba(100, 0, 255, 0.2);
+    animation: siri-idle 4s ease-in-out infinite;
+    position: relative;
+    z-index: 2;
+}
+ 
+.siri-orb-main::before {
+    content: '';
+    position: absolute;
+    inset: 4px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.6), transparent 50%);
+}
+ 
+.siri-orb-ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid rgba(0, 245, 255, 0.3);
+    animation: siri-ring 3s ease-in-out infinite;
+}
+ 
+.siri-orb-ring:nth-child(1) { width: 60px; height: 60px; animation-delay: 0s; }
+.siri-orb-ring:nth-child(2) { width: 70px; height: 70px; animation-delay: 0.4s; border-color: rgba(100, 0, 255, 0.2); }
+.siri-orb-ring:nth-child(3) { width: 80px; height: 80px; animation-delay: 0.8s; border-color: rgba(0, 100, 255, 0.15); }
+ 
+@keyframes siri-ring {
+    0%, 100% { transform: scale(1); opacity: 0.6; }
+    50% { transform: scale(1.1); opacity: 1; }
+}
+ 
+@keyframes siri-idle {
+    0%, 100% { 
+        transform: scale(1) translateY(0);
+        box-shadow: 0 0 20px rgba(0, 200, 255, 0.8), 0 0 60px rgba(0, 150, 255, 0.4);
+    }
+    33% { 
+        transform: scale(1.05) translateY(-2px);
+        background: radial-gradient(circle at 45% 35%, rgba(180, 130, 255, 0.95), rgba(80, 0, 200, 0.9));
+        box-shadow: 0 0 30px rgba(150, 0, 255, 0.8), 0 0 80px rgba(100, 0, 255, 0.4);
+    }
+    66% { 
+        transform: scale(1.03) translateY(1px);
+        background: radial-gradient(circle at 35% 40%, rgba(100, 255, 220, 0.95), rgba(0, 180, 150, 0.9));
+        box-shadow: 0 0 25px rgba(0, 255, 200, 0.8), 0 0 70px rgba(0, 200, 150, 0.4);
+    }
+}
+ 
+/* Orbe active (quand l'IA répond) */
+.siri-orb-main.active {
+    animation: siri-speaking 0.6s ease-in-out infinite alternate;
+}
+ 
+@keyframes siri-speaking {
+    0% { 
+        transform: scale(0.95);
+        background: radial-gradient(circle at 40% 35%, rgba(120, 230, 255, 0.95), rgba(0, 120, 220, 0.9));
+        box-shadow: 0 0 20px rgba(0, 200, 255, 0.8), 0 0 40px rgba(0, 150, 255, 0.4);
+    }
+    100% { 
+        transform: scale(1.15);
+        background: radial-gradient(circle at 55% 30%, rgba(255, 200, 100, 0.9), rgba(200, 80, 0, 0.8) 40%, rgba(100, 0, 200, 0.9));
+        box-shadow: 0 0 40px rgba(255, 150, 0, 0.7), 0 0 80px rgba(200, 50, 255, 0.4), 0 0 120px rgba(0, 200, 255, 0.3);
+    }
+}
+ 
+/* --- HOLOGRAPHIC LABEL --- */
+.holo-tag {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(0, 245, 255, 0.5);
+    padding: 2px 8px;
+    border: 1px solid rgba(0, 245, 255, 0.2);
+    border-radius: 3px;
+    background: rgba(0, 245, 255, 0.03);
+}
+ 
+/* --- BOTTOM GRADIENT --- */
+.fixed.bottom-0 {
+    background: linear-gradient(180deg, transparent, rgba(2, 6, 23, 0.9)) !important;
+}
+ 
+/* --- MODAL SETTINGS --- */
+.dark\:bg-gray-900 {
+    background: rgba(3, 7, 20, 0.95) !important;
+    backdrop-filter: blur(20px) !important;
+    border: 1px solid rgba(0, 245, 255, 0.15) !important;
+}
+ 
+/* --- SÉLECTION TEXTE --- */
+::selection {
+    background: rgba(0, 245, 255, 0.2);
+    color: white;
+}
+ 
+/* --- ANIMATIONS D'ENTRÉE PAGE --- */
+@keyframes fade-in-up {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+ 
+.animate-fade-in {
+    animation: fade-in-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+ 
+/* --- GLITCH EFFECT (logo hover) --- */
+@keyframes glitch {
+    0% { clip-path: inset(0 0 98% 0); transform: translate(-2px, 0); }
+    10% { clip-path: inset(30% 0 40% 0); transform: translate(2px, 0); }
+    20% { clip-path: inset(60% 0 20% 0); transform: translate(-2px, 0); }
+    30% { clip-path: inset(80% 0 5% 0); transform: translate(2px, 0); }
+    40% { clip-path: inset(0 0 0 0); transform: translate(0, 0); }
+    100% { clip-path: inset(0 0 0 0); transform: translate(0, 0); }
+}
+ 
+/* --- PARTICLE STREAM (entrée) --- */
+@keyframes particle-stream {
+    0% { transform: translateY(-100vh) rotate(45deg); opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { transform: translateY(100vh) rotate(45deg); opacity: 0; }
+}
+ 
+.particle-line {
+    position: fixed;
+    width: 1px;
+    height: 100px;
+    background: linear-gradient(180deg, transparent, var(--cyan-primary), transparent);
+    pointer-events: none;
+    animation: particle-stream linear infinite;
+    opacity: 0;
+}
+ 

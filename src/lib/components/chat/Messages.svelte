@@ -220,22 +220,20 @@
 	<!-- PAGE D'ACCUEIL FUTURISTE -->
 	<div class="m-auto text-center max-w-md pb-56 px-2 min-h-screen flex flex-col justify-center items-center">
         
-		<!-- SIRI ORB - Animation principale -->
-		<div class="mb-8 relative">
-			<div class="siri-orb-wrapper mx-auto" style="width:120px;height:120px;">
-				<div class="siri-orb-ring" style="width:90px;height:90px;"></div>
-				<div class="siri-orb-ring" style="width:105px;height:105px;"></div>
-				<div class="siri-orb-ring" style="width:120px;height:120px;"></div>
-				<div class="siri-orb-main" style="width:70px;height:70px;position:absolute;"></div>
+		<!-- LOGO ASTROLINK avec étoile orbitale -->
+		<div class="logo-container">
+			<!-- Anneaux orbitaux -->
+			<div class="orbit-ring ring-outer"></div>
+			<div class="orbit-ring ring-inner"></div>
+			<!-- Étoile qui tourne autour du A -->
+			<div class="star-orbit">
+				<div class="orbit-star"></div>
 			</div>
-		</div>
- 
-        <div class="relative group mt-4">
+			<!-- Logo principal -->
             <img 
                 src="{base}/astrolink.png" 
                 alt="AstroLink Logo" 
-                class="relative w-32 h-32 object-cover mx-auto drop-shadow-[0_0_25px_rgba(0,245,255,0.7)]"
-				style="border-radius: 50%; border: 1px solid rgba(0,245,255,0.3);"
+                class="logo-img"
             />
         </div>
  
@@ -260,16 +258,6 @@
             by Marko
         </div>
  
-		<!-- Status indicators -->
-		<div class="mt-8 flex gap-4 justify-center">
-			{#each ['ONLINE', 'SECURE', 'READY'] as status, i}
-				<div class="flex items-center gap-1.5 text-xs" style="font-family: 'Share Tech Mono'; color: rgba(0,245,255,0.4);">
-					<div class="w-1.5 h-1.5 rounded-full bg-cyan-400"
-						style="box-shadow: 0 0 6px #00f5ff; animation: status-blink {1.5 + i * 0.5}s ease-in-out infinite;"></div>
-					{status}
-				</div>
-			{/each}
-		</div>
 	</div>
  
 {:else}
@@ -504,50 +492,111 @@
 		to { opacity: 1; transform: translateY(0); }
 	}
  
-	/* Siri orb large (accueil) */
-	.siri-orb-wrapper {
-		display: flex;
-		justify-content: center;
-		align-items: center;
+	/* ===== LOGO CONTAINER AVEC ÉTOILE ORBITALE ===== */
+	.logo-container {
 		position: relative;
+		width: 180px;
+		height: 180px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		margin: 0 auto 24px;
 	}
  
-	.siri-orb-main {
+	.logo-img {
+		width: 140px;
+		height: 140px;
+		object-fit: cover;
 		border-radius: 50%;
-		background: radial-gradient(circle at 40% 35%, rgba(120, 230, 255, 0.95), rgba(0, 120, 220, 0.9) 50%, rgba(80, 0, 180, 0.8));
-		box-shadow: 0 0 30px rgba(0, 200, 255, 0.8), 0 0 80px rgba(0, 150, 255, 0.4), 0 0 120px rgba(100, 0, 255, 0.2);
-		animation: siri-idle 4s ease-in-out infinite;
+		position: relative;
+		z-index: 2;
+		filter: drop-shadow(0 0 20px rgba(0, 245, 255, 0.5)) drop-shadow(0 0 50px rgba(124, 58, 237, 0.3));
+		animation: logo-float 4s ease-in-out infinite;
 	}
  
-	.siri-orb-ring {
+	@keyframes logo-float {
+		0%, 100% { transform: translateY(0px) scale(1); }
+		50% { transform: translateY(-6px) scale(1.02); }
+	}
+ 
+	/* Anneaux orbitaux */
+	.orbit-ring {
 		position: absolute;
 		border-radius: 50%;
-		border: 1px solid rgba(0, 245, 255, 0.25);
-		animation: siri-ring 3s ease-in-out infinite;
+		border: 1px solid rgba(0, 245, 255, 0.2);
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		animation: ring-pulse 3s ease-in-out infinite;
 	}
  
-	.siri-orb-ring:nth-child(1) { animation-delay: 0s; border-color: rgba(0, 245, 255, 0.3); }
-	.siri-orb-ring:nth-child(2) { animation-delay: 0.4s; border-color: rgba(100, 0, 255, 0.2); }
-	.siri-orb-ring:nth-child(3) { animation-delay: 0.8s; border-color: rgba(0, 100, 255, 0.15); }
- 
-	@keyframes siri-ring {
-		0%, 100% { transform: scale(1); opacity: 0.5; }
-		50% { transform: scale(1.08); opacity: 1; }
+	.ring-outer {
+		width: 175px;
+		height: 175px;
+		border-color: rgba(0, 245, 255, 0.15);
+		animation-delay: 0s;
 	}
  
-	@keyframes siri-idle {
-		0%, 100% { 
-			transform: scale(1) translateY(0);
-			background: radial-gradient(circle at 40% 35%, rgba(120, 230, 255, 0.95), rgba(0, 120, 220, 0.9) 50%, rgba(80, 0, 180, 0.8));
-		}
-		33% { 
-			transform: scale(1.05) translateY(-3px);
-			background: radial-gradient(circle at 45% 35%, rgba(180, 130, 255, 0.95), rgba(80, 0, 200, 0.9));
-		}
-		66% { 
-			transform: scale(1.03) translateY(2px);
-			background: radial-gradient(circle at 35% 40%, rgba(100, 255, 220, 0.95), rgba(0, 180, 150, 0.9));
-		}
+	.ring-inner {
+		width: 155px;
+		height: 155px;
+		border-color: rgba(124, 58, 237, 0.2);
+		animation-delay: 0.5s;
+	}
+ 
+	@keyframes ring-pulse {
+		0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
+		50% { opacity: 1; transform: translate(-50%, -50%) scale(1.03); }
+	}
+ 
+	/* ÉTOILE QUI TOURNE AUTOUR DU LOGO */
+	.star-orbit {
+		position: absolute;
+		width: 180px;
+		height: 180px;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		animation: orbit-rotate 3s linear infinite;
+		z-index: 3;
+	}
+ 
+	@keyframes orbit-rotate {
+		from { transform: translate(-50%, -50%) rotate(0deg); }
+		to   { transform: translate(-50%, -50%) rotate(360deg); }
+	}
+ 
+	.orbit-star {
+		position: absolute;
+		top: -6px;
+		left: 50%;
+		transform: translateX(-50%);
+		width: 12px;
+		height: 12px;
+		background: radial-gradient(circle, #fff 0%, #a78bfa 40%, transparent 70%);
+		border-radius: 50%;
+		box-shadow: 
+			0 0 8px 2px rgba(167, 139, 250, 0.9),
+			0 0 20px 4px rgba(124, 58, 237, 0.6),
+			0 0 40px 8px rgba(100, 0, 255, 0.3);
+		animation: star-twinkle 1s ease-in-out infinite alternate;
+	}
+ 
+	/* Traîne de l'étoile */
+	.orbit-star::before {
+		content: '';
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%) rotate(90deg);
+		width: 2px;
+		height: 20px;
+		background: linear-gradient(to bottom, rgba(167, 139, 250, 0.8), transparent);
+		border-radius: 2px;
+	}
+ 
+	@keyframes star-twinkle {
+		0% { transform: translateX(-50%) scale(0.85); box-shadow: 0 0 8px 2px rgba(167, 139, 250, 0.7), 0 0 20px 4px rgba(124, 58, 237, 0.4); }
+		100% { transform: translateX(-50%) scale(1.15); box-shadow: 0 0 12px 4px rgba(200, 180, 255, 1), 0 0 30px 8px rgba(167, 139, 250, 0.7), 0 0 50px 12px rgba(100, 0, 255, 0.4); }
 	}
 </style>
- 
