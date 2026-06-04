@@ -146,38 +146,9 @@
 			animate();
 		}
  
-		// === CURSEUR CUSTOM ===
-		const cursor = document.createElement('div');
-		cursor.className = 'custom-cursor';
-		const cursorRing = document.createElement('div');
-		cursorRing.className = 'custom-cursor-ring';
-		document.body.appendChild(cursor);
-		document.body.appendChild(cursorRing);
- 
-		let mouseX = 0, mouseY = 0;
-		let ringX = 0, ringY = 0;
- 
-		document.addEventListener('mousemove', (e) => {
-			mouseX = e.clientX;
-			mouseY = e.clientY;
-			cursor.style.left = mouseX + 'px';
-			cursor.style.top = mouseY + 'px';
-		});
- 
-		const animateCursor = () => {
-			ringX += (mouseX - ringX) * 0.12;
-			ringY += (mouseY - ringY) * 0.12;
-			cursorRing.style.left = ringX + 'px';
-			cursorRing.style.top = ringY + 'px';
-			requestAnimationFrame(animateCursor);
-		};
-		animateCursor();
- 
 		return () => {
 			window.removeEventListener('resize', resize);
 			if (animationId) cancelAnimationFrame(animationId);
-			cursor.remove();
-			cursorRing.remove();
 		};
 	});
  
@@ -220,22 +191,154 @@
 	<!-- PAGE D'ACCUEIL FUTURISTE -->
 	<div class="m-auto text-center max-w-md pb-56 px-2 min-h-screen flex flex-col justify-center items-center">
         
-		<!-- LOGO ASTROLINK avec étoile orbitale -->
+		<!-- LOGO ASTROLINK — Lettre A avec étoiles gravitantes -->
 		<div class="logo-container">
-			<!-- Anneaux orbitaux -->
-			<div class="orbit-ring ring-outer"></div>
-			<div class="orbit-ring ring-inner"></div>
-			<!-- Étoile qui tourne autour du A -->
-			<div class="star-orbit">
-				<div class="orbit-star"></div>
-			</div>
-			<!-- Logo principal -->
-            <img 
-                src="{base}/astrolink.png" 
-                alt="AstroLink Logo" 
-                class="logo-img"
-            />
-        </div>
+			<svg viewBox="-120 -120 240 240" width="260" height="260" xmlns="http://www.w3.org/2000/svg">
+				<defs>
+					<!-- Glow filter pour le A -->
+					<filter id="glow-a" x="-50%" y="-50%" width="200%" height="200%">
+						<feGaussianBlur stdDeviation="4" result="blur1"/>
+						<feGaussianBlur stdDeviation="10" result="blur2"/>
+						<feMerge>
+							<feMergeNode in="blur2"/>
+							<feMergeNode in="blur1"/>
+							<feMergeNode in="SourceGraphic"/>
+						</feMerge>
+					</filter>
+					<!-- Glow pour les étoiles -->
+					<filter id="glow-star" x="-200%" y="-200%" width="500%" height="500%">
+						<feGaussianBlur stdDeviation="3" result="blur"/>
+						<feMerge>
+							<feMergeNode in="blur"/>
+							<feMergeNode in="SourceGraphic"/>
+						</feMerge>
+					</filter>
+					<!-- Gradient violet→cyan pour le A -->
+					<linearGradient id="grad-a" x1="0%" y1="0%" x2="100%" y2="100%">
+						<stop offset="0%" stop-color="#a78bfa"/>
+						<stop offset="50%" stop-color="#00f5ff"/>
+						<stop offset="100%" stop-color="#7c3aed"/>
+					</linearGradient>
+					<!-- Gradient trail étoiles -->
+					<linearGradient id="trail-v" x1="0%" y1="0%" x2="0%" y2="100%">
+						<stop offset="0%" stop-color="#a78bfa" stop-opacity="0"/>
+						<stop offset="100%" stop-color="#a78bfa" stop-opacity="0.7"/>
+					</linearGradient>
+					<linearGradient id="trail-h" x1="0%" y1="0%" x2="100%" y2="0%">
+						<stop offset="0%" stop-color="#00f5ff" stop-opacity="0.7"/>
+						<stop offset="100%" stop-color="#00f5ff" stop-opacity="0"/>
+					</linearGradient>
+					<linearGradient id="trail-d" x1="0%" y1="0%" x2="100%" y2="100%">
+						<stop offset="0%" stop-color="#f472b6" stop-opacity="0.7"/>
+						<stop offset="100%" stop-color="#f472b6" stop-opacity="0"/>
+					</linearGradient>
+				</defs>
+ 
+				<!-- ═══ ORBITES (ellipses visibles) ═══ -->
+				<!-- Orbite verticale -->
+				<ellipse cx="0" cy="0" rx="18" ry="100" fill="none"
+					stroke="rgba(167,139,250,0.15)" stroke-width="1" stroke-dasharray="4 6"/>
+				<!-- Orbite horizontale -->
+				<ellipse cx="0" cy="0" rx="105" ry="18" fill="none"
+					stroke="rgba(0,245,255,0.15)" stroke-width="1" stroke-dasharray="4 6"/>
+				<!-- Orbite diagonale (inclinée 45°) -->
+				<ellipse cx="0" cy="0" rx="100" ry="22" fill="none"
+					stroke="rgba(244,114,182,0.15)" stroke-width="1" stroke-dasharray="4 6"
+					transform="rotate(40)"/>
+ 
+				<!-- ═══ LETTRE A — grand, centré ═══ -->
+				<g filter="url(#glow-a)">
+					<!-- Jambe gauche du A -->
+					<line x1="-38" y1="62" x2="0" y2="-62" stroke="url(#grad-a)" stroke-width="10" stroke-linecap="round"/>
+					<!-- Jambe droite du A -->
+					<line x1="38" y1="62" x2="0" y2="-62" stroke="url(#grad-a)" stroke-width="10" stroke-linecap="round"/>
+					<!-- Barre horizontale du A -->
+					<line x1="-20" y1="18" x2="20" y2="18" stroke="url(#grad-a)" stroke-width="7" stroke-linecap="round"/>
+					<!-- Sommet du A — petit point brillant -->
+					<circle cx="0" cy="-62" r="5" fill="#fff" opacity="0.9">
+						<animate attributeName="opacity" values="0.6;1;0.6" dur="2s" repeatCount="indefinite"/>
+						<animate attributeName="r" values="4;6;4" dur="2s" repeatCount="indefinite"/>
+					</circle>
+				</g>
+ 
+				<!-- ═══ ÉTOILE 1 — orbite VERTICALE (violet) ═══ -->
+				<g>
+					<!-- Traîne verticale -->
+					<line x1="0" y1="-100" x2="0" y2="-70" stroke="url(#trail-v)" stroke-width="1.5" stroke-linecap="round">
+						<animateTransform attributeName="transform" type="rotate"
+							from="0 0 0" to="360 0 0" dur="4s" repeatCount="indefinite"/>
+					</line>
+					<!-- L'étoile elle-même -->
+					<circle cx="0" cy="-100" r="6" fill="#c4b5fd" filter="url(#glow-star)">
+						<animateTransform attributeName="transform" type="rotate"
+							from="0 0 0" to="360 0 0" dur="4s" repeatCount="indefinite"/>
+						<animate attributeName="r" values="5;7;5" dur="1.2s" repeatCount="indefinite"/>
+					</circle>
+					<!-- Éclat en croix -->
+					<g filter="url(#glow-star)">
+						<line x1="0" y1="-106" x2="0" y2="-94" stroke="white" stroke-width="1" opacity="0.8">
+							<animateTransform attributeName="transform" type="rotate"
+								from="0 0 0" to="360 0 0" dur="4s" repeatCount="indefinite"/>
+						</line>
+						<line x1="-6" y1="-100" x2="6" y2="-100" stroke="white" stroke-width="1" opacity="0.8">
+							<animateTransform attributeName="transform" type="rotate"
+								from="0 0 0" to="360 0 0" dur="4s" repeatCount="indefinite"/>
+						</line>
+					</g>
+				</g>
+ 
+				<!-- ═══ ÉTOILE 2 — orbite HORIZONTALE (cyan) ═══ -->
+				<g>
+					<!-- Traîne horizontale -->
+					<line x1="105" y1="0" x2="75" y2="0" stroke="url(#trail-h)" stroke-width="1.5" stroke-linecap="round">
+						<animateTransform attributeName="transform" type="rotate"
+							from="0 0 0" to="-360 0 0" dur="5.5s" repeatCount="indefinite"/>
+					</line>
+					<!-- L'étoile -->
+					<circle cx="105" cy="0" r="6" fill="#00f5ff" filter="url(#glow-star)">
+						<animateTransform attributeName="transform" type="rotate"
+							from="0 0 0" to="-360 0 0" dur="5.5s" repeatCount="indefinite"/>
+						<animate attributeName="r" values="5;8;5" dur="1.5s" repeatCount="indefinite"/>
+					</circle>
+					<g filter="url(#glow-star)">
+						<line x1="105" y1="-7" x2="105" y2="7" stroke="white" stroke-width="1" opacity="0.8">
+							<animateTransform attributeName="transform" type="rotate"
+								from="0 0 0" to="-360 0 0" dur="5.5s" repeatCount="indefinite"/>
+						</line>
+						<line x1="98" y1="0" x2="112" y2="0" stroke="white" stroke-width="1" opacity="0.8">
+							<animateTransform attributeName="transform" type="rotate"
+								from="0 0 0" to="-360 0 0" dur="5.5s" repeatCount="indefinite"/>
+						</line>
+					</g>
+				</g>
+ 
+				<!-- ═══ ÉTOILE 3 — orbite DIAGONALE (rose) ═══ -->
+				<g transform="rotate(40)">
+					<!-- Traîne diagonale -->
+					<line x1="100" y1="0" x2="72" y2="0" stroke="url(#trail-d)" stroke-width="1.5" stroke-linecap="round">
+						<animateTransform attributeName="transform" type="rotate"
+							from="0 0 0" to="360 0 0" dur="7s" repeatCount="indefinite"/>
+					</line>
+					<!-- L'étoile -->
+					<circle cx="100" cy="0" r="5.5" fill="#f472b6" filter="url(#glow-star)">
+						<animateTransform attributeName="transform" type="rotate"
+							from="0 0 0" to="360 0 0" dur="7s" repeatCount="indefinite"/>
+						<animate attributeName="r" values="4.5;7;4.5" dur="1.8s" repeatCount="indefinite"/>
+					</circle>
+					<g filter="url(#glow-star)">
+						<line x1="100" y1="-6" x2="100" y2="6" stroke="white" stroke-width="1" opacity="0.8">
+							<animateTransform attributeName="transform" type="rotate"
+								from="0 0 0" to="360 0 0" dur="7s" repeatCount="indefinite"/>
+						</line>
+						<line x1="93" y1="0" x2="107" y2="0" stroke="white" stroke-width="1" opacity="0.8">
+							<animateTransform attributeName="transform" type="rotate"
+								from="0 0 0" to="360 0 0" dur="7s" repeatCount="indefinite"/>
+						</line>
+					</g>
+				</g>
+ 
+			</svg>
+		</div>
  
 		<!-- Titre holographique -->
 		<div class="mt-6">
@@ -492,111 +595,17 @@
 		to { opacity: 1; transform: translateY(0); }
 	}
  
-	/* ===== LOGO CONTAINER AVEC ÉTOILE ORBITALE ===== */
+	/* ===== LOGO CONTAINER ===== */
 	.logo-container {
-		position: relative;
-		width: 180px;
-		height: 180px;
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		margin: 0 auto 24px;
+		margin: 0 auto 16px;
+		animation: logo-breathe 4s ease-in-out infinite;
 	}
  
-	.logo-img {
-		width: 140px;
-		height: 140px;
-		object-fit: cover;
-		border-radius: 50%;
-		position: relative;
-		z-index: 2;
-		filter: drop-shadow(0 0 20px rgba(0, 245, 255, 0.5)) drop-shadow(0 0 50px rgba(124, 58, 237, 0.3));
-		animation: logo-float 4s ease-in-out infinite;
-	}
- 
-	@keyframes logo-float {
-		0%, 100% { transform: translateY(0px) scale(1); }
-		50% { transform: translateY(-6px) scale(1.02); }
-	}
- 
-	/* Anneaux orbitaux */
-	.orbit-ring {
-		position: absolute;
-		border-radius: 50%;
-		border: 1px solid rgba(0, 245, 255, 0.2);
-		top: 50%;
-		left: 50%;
-		transform: translate(-50%, -50%);
-		animation: ring-pulse 3s ease-in-out infinite;
-	}
- 
-	.ring-outer {
-		width: 175px;
-		height: 175px;
-		border-color: rgba(0, 245, 255, 0.15);
-		animation-delay: 0s;
-	}
- 
-	.ring-inner {
-		width: 155px;
-		height: 155px;
-		border-color: rgba(124, 58, 237, 0.2);
-		animation-delay: 0.5s;
-	}
- 
-	@keyframes ring-pulse {
-		0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
-		50% { opacity: 1; transform: translate(-50%, -50%) scale(1.03); }
-	}
- 
-	/* ÉTOILE QUI TOURNE AUTOUR DU LOGO */
-	.star-orbit {
-		position: absolute;
-		width: 180px;
-		height: 180px;
-		top: 50%;
-		left: 50%;
-		transform: translate(-50%, -50%);
-		animation: orbit-rotate 3s linear infinite;
-		z-index: 3;
-	}
- 
-	@keyframes orbit-rotate {
-		from { transform: translate(-50%, -50%) rotate(0deg); }
-		to   { transform: translate(-50%, -50%) rotate(360deg); }
-	}
- 
-	.orbit-star {
-		position: absolute;
-		top: -6px;
-		left: 50%;
-		transform: translateX(-50%);
-		width: 12px;
-		height: 12px;
-		background: radial-gradient(circle, #fff 0%, #a78bfa 40%, transparent 70%);
-		border-radius: 50%;
-		box-shadow: 
-			0 0 8px 2px rgba(167, 139, 250, 0.9),
-			0 0 20px 4px rgba(124, 58, 237, 0.6),
-			0 0 40px 8px rgba(100, 0, 255, 0.3);
-		animation: star-twinkle 1s ease-in-out infinite alternate;
-	}
- 
-	/* Traîne de l'étoile */
-	.orbit-star::before {
-		content: '';
-		position: absolute;
-		top: 50%;
-		left: 50%;
-		transform: translate(-50%, -50%) rotate(90deg);
-		width: 2px;
-		height: 20px;
-		background: linear-gradient(to bottom, rgba(167, 139, 250, 0.8), transparent);
-		border-radius: 2px;
-	}
- 
-	@keyframes star-twinkle {
-		0% { transform: translateX(-50%) scale(0.85); box-shadow: 0 0 8px 2px rgba(167, 139, 250, 0.7), 0 0 20px 4px rgba(124, 58, 237, 0.4); }
-		100% { transform: translateX(-50%) scale(1.15); box-shadow: 0 0 12px 4px rgba(200, 180, 255, 1), 0 0 30px 8px rgba(167, 139, 250, 0.7), 0 0 50px 12px rgba(100, 0, 255, 0.4); }
+	@keyframes logo-breathe {
+		0%, 100% { filter: drop-shadow(0 0 15px rgba(0,245,255,0.3)) drop-shadow(0 0 40px rgba(124,58,237,0.2)); }
+		50% { filter: drop-shadow(0 0 25px rgba(0,245,255,0.6)) drop-shadow(0 0 70px rgba(124,58,237,0.4)); }
 	}
 </style>
